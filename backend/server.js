@@ -17,38 +17,46 @@ app.get("/", (req, res) => {
 app.post("/api/gerar-ata", async (req, res) => {
   try {
     const { nomeReuniao, participantes, transcricao } = req.body;
-    if (!nomeReuniao || !String(nomeReuniao).trim()) return res.status(400).json({ error: "Informe o nome da reunião." });
-    if (!transcricao || !String(transcricao).trim()) return res.status(400).json({ error: "A transcrição está vazia." });
+    if (!nomeReuniao || !String(nomeReuniao).trim()) {
+      return res.status(400).json({ error: "Informe o nome da reuniao." });
+    }
+    if (!transcricao || !String(transcricao).trim()) {
+      return res.status(400).json({ error: "A transcricao esta vazia." });
+    }
 
     const participantesTexto = Array.isArray(participantes) ? participantes.join(", ") : "";
-    const prompt = `Você é responsável por redigir uma ata de reunião escolar/profissional.
+    const prompt = `Voce e responsavel por redigir uma ata de reuniao escolar/profissional.
 
-Crie uma ATA EXTENSA, FORMAL, EM TERCEIRA PESSOA e EM TEXTO CORRIDO.
+Crie uma ATA DETALHADA, FORMAL, EM TERCEIRA PESSOA e EM TEXTO CORRIDO.
 
-Regras obrigatórias:
-- Não copie a transcrição literalmente.
+Regras obrigatorias:
+- Nao copie a transcricao literalmente.
 - Interprete o que foi conversado.
-- Escreva como uma pessoa que assistiu à reunião e está registrando os fatos.
-- Mantenha ordem cronológica dos assuntos.
-- Use linguagem institucional, clara e objetiva.
-- Não use tópicos.
-- Não invente decisões que não aparecem na transcrição.
+- Escreva como uma pessoa que assistiu a reuniao e esta registrando os fatos.
+- Mantenha ordem cronologica dos assuntos.
+- Use linguagem institucional, clara, objetiva e completa.
+- Nao use topicos.
+- Nao invente decisoes que nao aparecem na transcricao.
 - Quando houver encaminhamentos, registre de forma natural no texto.
-- Não coloque lista de participantes no início.
+- Desenvolva os assuntos com contexto, justificativas, problemas discutidos, decisoes tomadas, responsabilidades mencionadas e prazos quando aparecerem na transcricao.
+- Evite resumo excessivo: cada tema relevante deve ser explicado em paragrafos completos, preservando o sentido da discussao.
+- Se houver divergencias, preocupacoes, propostas ou observacoes importantes, registre-as de forma institucional.
+- Nao reduza a ata a poucas frases. Produza um texto substancial e fiel ao conteudo da reuniao.
+- Nao coloque lista de participantes no inicio.
 - No final da ata, inclua a frase: "Estiveram presentes: " seguida dos nomes dos participantes.
-- Não coloque campo de assinatura.
-- Não coloque markdown.
-- Não coloque título com #.
-- A ata deve ter aparência de documento oficial, mas em texto corrido.
-- Ignore conversas paralelas que não tenham relação com a reunião.
+- Nao coloque campo de assinatura.
+- Nao coloque markdown.
+- Nao coloque titulo com #.
+- A ata deve ter aparencia de documento oficial, mas em texto corrido.
+- Ignore conversas paralelas que nao tenham relacao com a reuniao.
 
-Nome da reunião:
+Nome da reuniao:
 ${nomeReuniao}
 
 Participantes presentes:
 ${participantesTexto}
 
-Transcrição da reunião:
+Transcricao da reuniao:
 ${transcricao}
 
 Agora escreva apenas a ata final:`;

@@ -148,19 +148,17 @@ export default function App() {
     setErro('');
     if (!ata.trim()) { setErro('Gere ou escreva a ata antes de criar o PDF.'); return; }
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const margemX = 8, margemTopo = 7, larguraTexto = 194;
+    const margemX = 12, margemTopo = 12, larguraTexto = 186;
     let y = margemTopo;
-    doc.setFont('times', 'bold'); doc.setFontSize(11); doc.text('ATA DE REUNIÃO', 105, y, { align: 'center' });
-    y += 5;
-    doc.setFont('times', 'normal'); doc.setFontSize(8.5);
-    doc.text(`Reunião: ${nomeReuniao || 'Não informada'}`, margemX, y); y += 3.8;
-    doc.text(`Data: ${dataHoje}`, margemX, y); y += 4.5;
-    doc.setFontSize(8.5); doc.setLineHeightFactor(1.0);
-    const textoLimpo = ata.replace(/
-{2,}/g, '
-').replace(/\s+/g, ' ').trim();
+    doc.setFont('times', 'bold'); doc.setFontSize(13); doc.text('ATA DE REUNIÃO', 105, y, { align: 'center' });
+    y += 8;
+    doc.setFont('times', 'normal'); doc.setFontSize(10.5);
+    doc.text(`Reunião: ${nomeReuniao || 'Não informada'}`, margemX, y); y += 5.5;
+    doc.text(`Data: ${dataHoje}`, margemX, y); y += 6.5;
+    doc.setFontSize(10.5); doc.setLineHeightFactor(1.15);
+    const textoLimpo = ata.replace(/\n{2,}/g, '\n').replace(/\s+/g, ' ').trim();
     const linhas = doc.splitTextToSize(textoLimpo, larguraTexto);
-    linhas.forEach((linha) => { if (y > 287) { doc.addPage(); y = 7; } doc.text(linha, margemX, y, { maxWidth: larguraTexto }); y += 3.45; });
+    linhas.forEach((linha) => { if (y > 282) { doc.addPage(); y = margemTopo; } doc.text(linha, margemX, y, { maxWidth: larguraTexto }); y += 5; });
     const nomeArquivo = `ata-${nomeReuniao || 'reuniao'}`.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').toLowerCase();
     doc.save(`${nomeArquivo}.pdf`);
   }
